@@ -1,0 +1,6 @@
+# us:
+#   name: 'Gabe and Sarah'
+#   view: false
+#   entities:
+#     - device_tracker.gabriels_iphone
+#     - device_tracker.sarahs_iphone

@@ -1,0 +1,41 @@
+- alias: "Handle arrival"
+  initial_state: 'on'
+  trigger:
+    - platform: state
+      entity_id:
+        - device_tracker.gabriels_iphone
+        - device_tracker.sarahs_iphone
+      from: 'not_home'
+      to: 'home'
+  condition:
+    condition: template
+    value_template: >
+      {{ (trigger.entity_id == 'device_tracker.gabriels_iphone' and is_state('device_tracker.sarahs_iphone', 'not_home')) or
+          (trigger.entity_id == 'device_tracker.sarahs_iphone' and is_state('device_tracker.gabriels_iphone', 'not_home')) }}
+  action:
+    - service: python_script.set_livingroom
+      data_template:
+        lamp: true
+        hue:
+          brightness: 255
+          color: 'warm'
+- alias: "Handle departure"
+  initial_state: 'on'
+  trigger:
+    - platform: state
+      entity_id:
+        - device_tracker.gabriels_iphone
+        - device_tracker.sarahs_iphone
+      from: 'home'
+      to: 'not_home'
+  condition:
+    condition: template
+    value_template: >
+      {{ (trigger.entity_id == 'device_tracker.gabriels_iphone' and is_state('device_tracker.sarahs_iphone', 'not_home')) or
+          (trigger.entity_id == 'device_tracker.sarahs_iphone' and is_state('device_tracker.gabriels_iphone', 'not_home')) }}
+  action:
+    - service: python_script.set_livingroom
+      data_template:
+        lamp: false
+        hue:
+          brightness: 0
