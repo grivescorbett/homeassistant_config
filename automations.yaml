@@ -39,3 +39,10 @@
         lamp: false
         hue:
           brightness: 0
+    - service_template: notify.ios_{{ trigger.entity_id.split('.')[1] }}
+      data:
+        title: 'Cya later'
+        message: 'Lights off'
+        data:
+          push:
+            thread-id: 'lights-off'

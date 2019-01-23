@@ -14,7 +14,7 @@ homeassistant:
   customize: !include customize.yaml
 
 # Show links to resources in log and frontend
-introduction:
+# introduction:
 
 # Enables the frontend
 frontend:
@@ -39,7 +39,7 @@ updater:
 discovery:
 
 # Allows you to issue voice commands from the frontend in enabled browsers
-conversation:
+# conversation:
 
 # Enables support for tracking state changes over time
 history:
@@ -48,15 +48,30 @@ history:
 logbook:
 
 # Enables a map showing the location of tracked devices
-map:
+# map:
 
 # Track the sun
-sun:
+# sun:
 
 # Sensors
 sensor:
   # Weather prediction
-  - platform: yr
+  - platform: darksky
+    api_key: !secret darksky
+    forecast:
+      - 0
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature
+      - temperature_high
+      - temperature_low
+      - precip_probability
+      - precip_type
+      - precip_intensity
+    units: 'us'
+    update_interval: '00:10'
+
 
 # Text to speech
 tts:
@@ -80,6 +95,27 @@ device_tracker:
   - platform: quantum_gateway
     host: 192.168.1.1
     password: !secret gateway_pass
+
+http:
+  api_password: !secret api_password
+  ssl_certificate: /etc/letsencrypt/live/gabeandsarah.hopto.org/fullchain.pem
+  ssl_key: /etc/letsencrypt/live/gabeandsarah.hopto.org/privkey.pem
+
+alexa:
+
+intent_script:
+  RunScriptIntent:
+    speech:
+      text: Did it
+    action:
+      service: notify.notify
+      data_template:
+        message: Hello
+
+notify:
+  platform: ios
+
+ios:
 
 group: !include groups.yaml
 automation: !include automations.yaml
