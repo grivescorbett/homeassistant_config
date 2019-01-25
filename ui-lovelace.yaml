@@ -23,4 +23,5 @@ views:
     cards:
       - type: 'custom:morning-weather-card'
         entity: weather.dark_sky
+        mta: sensor.mta_subway
         icons: '/local/cards/morning-weather/icons/'

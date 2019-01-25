@@ -63,6 +63,9 @@ class MorningWeather extends LitElement {
     if (!config.entity) {
       throw new Error("Please define a weather entity");
     }
+    if (!config.mta) {
+      throw new Error("Please provide an mta sensor");
+    }
     this._config = config;
   }
 
@@ -71,6 +74,90 @@ class MorningWeather extends LitElement {
       return html``;
     }
 
+
+
+    // const next_rising = new Date(
+    //   this.hass.states["sun.sun"].attributes.next_rising
+    // );
+    // const next_setting = new Date(
+    //   this.hass.states["sun.sun"].attributes.next_setting
+    // );
+
+    return html`
+      <ha-card class="morning-weather">
+        <div class="current-stats">
+
+        </div>
+        ${this.renderMta()}
+        ${this.renderWeather()}
+      </ha-card>
+    `;
+  }
+
+  renderMta() {
+    let subways = Object.keys(this.hass.states).filter(key => key.startsWith('sensor.mta_subway'));
+    subways.sort();
+
+    return html`
+        ${this.renderMtaStyle()}
+        <div class="mta">
+          ${
+            subways.map(
+              subway_key => {
+                const subway_sensor = this.hass.states[subway_key]
+
+                //last_updated not on attributes
+
+                return html`
+                  <div class="train">
+                    <div class="icon-container">
+                      <img class="train-icon" src="${subway_sensor.attributes.entity_picture}" />
+                    </div>
+                    <div class="status-container">
+                      <span class="subway-status">${subway_sensor.state}</span>
+                    </div>
+                  </div>
+                `;
+              }
+            )
+          }
+        </div>
+    `;
+  }
+
+  renderMtaStyle() {
+    return html`
+    <style>
+      .mta {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+      }
+
+      .train {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .status-container {
+        margin-left: 70px;
+      }
+
+      .subway-status {
+        font-size: 40px;
+        font-weight: 300;
+      }
+
+      .train-icon {
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+    `;
+  }
+
+  renderWeather() {
     const stateObj = this.hass.states[this._config.entity];
 
     if (!stateObj) {
@@ -90,40 +177,25 @@ class MorningWeather extends LitElement {
       `;
     }
 
-    const next_rising = new Date(
-      this.hass.states["sun.sun"].attributes.next_rising
-    );
-    const next_setting = new Date(
-      this.hass.states["sun.sun"].attributes.next_setting
-    );
-
     return html`
-      ${this.renderStyle()}
-      <ha-card class="morning-weather">
-        <div class="current-stats">
-
-        </div>
-        <div class="mta">
-          
-        </div>
-        <div class="hourly-container">
-          ${
-            stateObj.attributes.forecast.slice(0, 12).map(
-              hourly => html `
-                <div class="hourly">
-                  <span>${this.renderTime(hourly.datetime)}</span>
-                  <span>
-                    <div>
-                      <img class="condition-icon" src="${this.getWeatherIcon(hourly.condition, this.hass.states["sun.sun"].state)}" />
-                    </div>
-                  </span>
-                  <span class="temperature">${hourly.temperature}</span>
-                </div>
-              `
-            )
-          }
-        </div>
-      </ha-card>
+      ${this.renderWeatherStyle()}
+      <div class="hourly-container">
+        ${
+          stateObj.attributes.forecast.slice(0, 12).map(
+            hourly => html `
+              <div class="hourly">
+                <span>${this.renderTime(hourly.datetime)}</span>
+                <span>
+                  <div>
+                    <img class="condition-icon" src="${this.getWeatherIcon(hourly.condition, this.hass.states["sun.sun"].state)}" />
+                  </div>
+                </span>
+                <span class="temperature">${hourly.temperature}</span>
+              </div>
+            `
+          )
+        }
+      </div>
     `;
   }
 
@@ -146,7 +218,7 @@ class MorningWeather extends LitElement {
     `;
   }
 
-  renderStyle() {
+  renderWeatherStyle() {
     return html`
     <style>
       .morning-weather {
