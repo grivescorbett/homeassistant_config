@@ -97,8 +97,6 @@ sensor:
       - 3
       - A
       - C
-      - R
-      - 4
 
 weather:
   - platform: darksky

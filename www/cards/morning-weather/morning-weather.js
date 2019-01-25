@@ -85,12 +85,78 @@ class MorningWeather extends LitElement {
 
     return html`
       <ha-card class="morning-weather">
-        <div class="current-stats">
-
+        <div class="top-strip">
+          <div style="width: 35%; flex-grow: 1;"></div>
+          ${this.renderCurrent()}
+          ${this.renderMta()}
         </div>
-        ${this.renderMta()}
         ${this.renderWeather()}
       </ha-card>
+    `;
+  }
+
+  renderCurrent() {
+    const stateObj = this.hass.states[this._config.entity];
+
+    return html`
+      ${this.renderCurrentStyle()}
+      <div class="current-stats">
+        <div class="current-time">
+          8:15<span class="current-ampm">am</span>
+        </div>
+        <div class="weather-overview">
+          <span class="currently-text">currently</span>
+          <span class="currently-temp">${Math.round(stateObj.attributes.temperature)}</span>
+          <div>
+            <span>10</span>
+            <span>50</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderCurrentStyle() {
+    return html`
+    <style>
+      .top-strip {
+        display: flex;
+        align-items: center;
+      }
+
+      .weather-overview {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .currently-text {
+        font-size: 50px;
+        font-weight: 100;
+      }
+
+      .currently-temp {
+        font-size: 80px;
+        font-weight: 200;
+      }
+
+      .currently-temp::after {
+        content: "°"
+      }
+
+      .current-stats {
+        width: 33%;
+        text-align: center;
+      }
+
+      .current-time {
+        font-size: 140px;
+        font-weight: 200;
+      }
+
+      .current-ampm {
+        font-size: 100px
+      }
+    </style>
     `;
   }
 
@@ -131,7 +197,8 @@ class MorningWeather extends LitElement {
       .mta {
         display: flex;
         flex-direction: column;
-        width: 500px;
+        width: 33%;
+        flex-grow: 1;
       }
 
       .train {
