@@ -1,7 +1,7 @@
 # You can whitelist files/folders with !, these will not be ignored.
 .*
 *.log
-*.db
+*.db*
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml

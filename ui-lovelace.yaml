@@ -1,0 +1,26 @@
+resources:
+  - url: /local/cards/morning-weather/morning-weather.js?v=3
+    type: js
+  - url: /local/kiosk.js
+    type: js
+
+title: Gabe & Sarah's Apartment
+views:
+    # View tab title.
+  - title: Home
+    path: home
+    cards:
+        # The markdown card will render markdown text.
+      - type: markdown
+        title: Lovelace
+        content: >
+          Welcome to your **Lovelace UI**.
+  
+  - title: Morning
+    path: morning
+    panel: true
+    
+    cards:
+      - type: 'custom:morning-weather-card'
+        entity: weather.dark_sky
+        icons: '/local/cards/morning-weather/icons/'

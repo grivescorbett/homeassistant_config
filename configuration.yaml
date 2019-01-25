@@ -22,6 +22,9 @@ frontend:
 # Enables configuration UI
 config:
 
+lovelace:
+  mode: yaml
+
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
@@ -43,6 +46,22 @@ discovery:
 
 # Enables support for tracking state changes over time
 history:
+  exclude:
+    entities:
+      - sensor.dark_sky_daytime_high_temperature_0
+      - sensor.dark_sky_icon
+      - sensor.dark_sky_icon_0
+      - sensor.dark_sky_overnight_low_temperature_0
+      - sensor.dark_sky_precip
+      - sensor.dark_sky_precip_0
+      - sensor.dark_sky_precip_intensity
+      - sensor.dark_sky_precip_intensity_0
+      - sensor.dark_sky_precip_probability
+      - sensor.dark_sky_precip_probability_0
+      - sensor.dark_sky_summary
+      - sensor.dark_sky_summary_0
+      - sensor.dark_sky_temperature
+      - sensor.dark_sky_temperature_0      
 
 # View all events in a logbook
 logbook:
@@ -51,7 +70,7 @@ logbook:
 # map:
 
 # Track the sun
-# sun:
+sun:
 
 # Sensors
 sensor:
@@ -71,7 +90,18 @@ sensor:
       - precip_intensity
     units: 'us'
     update_interval: '00:10'
+  - platform: mta_subway
+    line:
+      - 1
+      - 2
+      - 3
+      - A
+      - C
 
+weather:
+  - platform: darksky
+    api_key: !secret darksky
+    units: 'us'
 
 # Text to speech
 tts:
@@ -100,6 +130,11 @@ http:
   api_password: !secret api_password
   ssl_certificate: /etc/letsencrypt/live/gabeandsarah.hopto.org/fullchain.pem
   ssl_key: /etc/letsencrypt/live/gabeandsarah.hopto.org/privkey.pem
+  trusted_networks:
+    - '127.0.0.1'
+    - '::1'
+    - '192.168.1.0/24'
+    - 'fd00::/8'
 
 alexa:
 
